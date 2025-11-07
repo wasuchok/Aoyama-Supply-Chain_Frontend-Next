@@ -24,6 +24,7 @@ const DashboardContent = () => {
     const [metrics, setMetrics] = useState<
         { label: string; value: number; icon: IconType; iconColor: string; color: string }[]
     >([]);
+    const WAVE_ANIMATION_DURATION = 12; // seconds
 
     const fetchAmountProductionBy = async () => {
         try {
@@ -104,43 +105,58 @@ const DashboardContent = () => {
         <main className="flex-1 overflow-y-auto p-4">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
-                    <section className="flex-1 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-                        <div className="flex flex-wrap items-end justify-between gap-4">
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-gray-400">Overview</p>
-                                <h1 className="text-2xl font-semibold text-gray-900">Supply Chain Information</h1>
-                                <p className="mt-1 text-sm text-gray-500">
-                                    Quick snapshot of part volume and partner status so the team sees everything at a glance.
-                                </p>
-                            </div>
-                            <div className="rounded-2xl bg-gray-50 px-4 py-2 text-right">
-                                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Total parts</p>
-                                <p className="text-3xl font-bold text-gray-900">{totalParts.toLocaleString()}</p>
-                            </div>
+                    <section className="relative flex-1 overflow-hidden rounded-3xl bg-gradient-to-br from-sky-600 via-blue-600 to-indigo-600 p-6 text-white shadow-lg">
+                        <div className="pointer-events-none absolute inset-0">
+                            <div className="absolute -top-16 -right-10 h-40 w-40 rounded-full bg-white/25 blur-3xl" />
+                            <div className="absolute -bottom-20 left-8 h-32 w-32 rounded-full bg-cyan-300/40 blur-3xl" />
+                            <svg className="absolute inset-x-0 bottom-0 w-full" height="120" preserveAspectRatio="none" viewBox="0 0 1440 320" aria-hidden="true">
+                                <path fill="url(#waveGradient)" fillOpacity="0.25" d="M0,256L48,234.7C96,213,192,171,288,165.3C384,160,480,192,576,197.3C672,203,768,181,864,192C960,203,1056,245,1152,245.3C1248,245,1344,203,1392,181.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" />
+                                <defs>
+                                    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stopColor="#fff" stopOpacity="0.6" />
+                                        <stop offset="100%" stopColor="#9ddcff" stopOpacity="0.4" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
+                        <div className="relative flex flex-col gap-5">
+                            <div className="flex flex-wrap items-end justify-between gap-4">
+                                <div>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/70">Overview</p>
+                                    <h1 className="text-2xl font-semibold text-white">Supply Chain Information</h1>
+                                    <p className="mt-1 text-sm text-white/80">
+                                        Quick snapshot of part volume and partner status so the team sees everything at a glance.
+                                    </p>
+                                </div>
+                                <div className="rounded-2xl border border-white/30 bg-white/15 px-4 py-2 text-right shadow-inner">
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-white/80">Total parts</p>
+                                    <p className="text-3xl font-bold text-white">{totalParts.toLocaleString()}</p>
+                                </div>
+                            </div>
 
-                        <div className="mt-4 grid w-full grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-                            {metrics.map((metric) => {
-                                const Icon = metric.icon;
-                                return (
-                                    <div
-                                        key={metric.label}
-                                        className="rounded-xl border border-gray-100 bg-gray-50/80 p-4 transition hover:bg-white"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <p className="text-sm font-medium text-gray-500">{metric.label}</p>
-                                                <p className="text-2xl font-bold text-gray-900">{metric.value.toLocaleString()}</p>
-                                            </div>
-                                            <div className="rounded-xl bg-white p-3 shadow-sm">
-                                                <span className={`text-xl ${metric.iconColor}`}>
-                                                    <Icon />
-                                                </span>
+                            <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                                {metrics.map((metric) => {
+                                    const Icon = metric.icon;
+                                    return (
+                                        <div
+                                            key={metric.label}
+                                            className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm transition hover:bg-white/20"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <p className="text-sm font-medium text-white/70">{metric.label}</p>
+                                                    <p className="text-2xl font-bold text-white">{metric.value.toLocaleString()}</p>
+                                                </div>
+                                                <div className="rounded-xl bg-white/20 p-3 shadow-lg shadow-black/10">
+                                                    <span className={`text-xl ${metric.iconColor}`}>
+                                                        <Icon />
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
                     </section>
 
