@@ -3,9 +3,10 @@
 import TextField from "@/app/components/Input/TextField"
 import ButtonTierGroup from "@/app/components/survey/detail/ButtonTierGroup"
 import { apiPublic } from "@/services/httpClient"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState, type ReactNode } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { FiArrowLeft } from "react-icons/fi"
 
 interface DetailItemProps {
     label: string
@@ -21,6 +22,7 @@ const DetailItem = ({ label, value }: DetailItemProps) => (
 
 const Page = () => {
     const { partno } = useParams()
+    const router = useRouter()
     const [partMaster, setPartMaster] = useState<any>(null)
     const [tierLength, setTierLength] = useState<number>(0)
     const [activeIndex, setActiveIndex] = useState(0)
@@ -129,6 +131,14 @@ const Page = () => {
         <>
             <main className="flex-1 overflow-y-auto p-4">
                 <div className="flex  flex-col gap-4">
+                    <button
+                        type="button"
+                        onClick={() => router.back()}
+                        className="inline-flex w-fit items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+                    >
+                        <FiArrowLeft className="h-4 w-4" />
+                        Back
+                    </button>
 
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
                         <div className="flex flex-col gap-1">

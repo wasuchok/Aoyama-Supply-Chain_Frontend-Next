@@ -177,6 +177,12 @@ const DashboardContent = () => {
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleSearch();
+                                }
+                            }}
                             placeholder="Search for part name, material, or supplier..."
                             className="flex-1 bg-transparent px-3 py-1.5 text-sm text-gray-700 outline-none placeholder-gray-400"
                         />
