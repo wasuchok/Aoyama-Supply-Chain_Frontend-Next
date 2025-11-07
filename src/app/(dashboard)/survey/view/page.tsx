@@ -1,6 +1,5 @@
 ﻿"use client"
 
-import TextField from "@/app/components/Input/TextField";
 import { ScrollableTable } from "@/app/components/survey/table/ScrollableTable";
 import { usePagination } from "@/app/hooks/usePagination";
 import { apiPublic } from "@/services/httpClient";
@@ -8,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { IconType } from "react-icons";
 import { FaCartShopping, FaNetworkWired } from "react-icons/fa6";
+import { FiSearch } from "react-icons/fi";
 import { IoIosPeople } from "react-icons/io";
 
 const DashboardContent = () => {
@@ -141,7 +141,24 @@ const DashboardContent = () => {
 
                     {loading && <p className="text-sm text-gray-500">Loading data...</p>}
 
-                    <TextField placeholder="Search..." className="sm:max-w-xs" />
+
+
+                    <div className="flex items-center w-full max-w-md bg-gray-50 border border-gray-200 rounded-xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 transition">
+                        <FiSearch className="text-gray-400 ml-1" size={18} />
+                        <input
+                            type="text"
+                            placeholder="Search for part name, material, or supplier..."
+                            className="flex-1 bg-transparent px-3 py-1.5 text-sm text-gray-700 outline-none placeholder-gray-400"
+                        />
+                        <button
+                            type="button"
+                            className="rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+                        >
+                            Search
+                        </button>
+                    </div>
+
+
 
                     <div className="flex-1 min-h-0 pt-3">
                         <ScrollableTable
@@ -230,9 +247,7 @@ const SummaryPieChart = ({ data }: { data: SummarySlice[] }) => {
         setTooltipPos(null);
     };
 
-    const legendButtonStyles = (isActive: boolean) =>
-        `flex items-center justify-between rounded-xl border px-3 py-2 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-300 ${isActive ? "border-primary-100 bg-primary-50 text-primary-900" : "border-gray-100 hover:border-gray-200"
-        }`;
+
 
     return (
         <div className="w-full rounded-2xl border border-gray-100 bg-white p-6 shadow-sm lg:max-w-sm">
