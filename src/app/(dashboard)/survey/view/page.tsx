@@ -12,7 +12,15 @@ import { IoIosPeople } from "react-icons/io";
 
 const DashboardContent = () => {
     const router = useRouter()
-    const { data, pagination, page, loading, fetchData } = usePagination(`/spc-part-master`);
+    const {
+        data,
+        pagination,
+        page,
+        loading,
+        searchTerm,
+        setSearchTerm,
+        fetchData
+    } = usePagination(`/spc-part-master`);
     const [metrics, setMetrics] = useState<
         { label: string; value: number; icon: IconType; iconColor: string; color: string }[]
     >([]);
@@ -85,6 +93,10 @@ const DashboardContent = () => {
         fetchAmountProductionBy()
     }, [])
 
+    const handleSearch = () => {
+        fetchData(1, searchTerm);
+    };
+
 
 
 
@@ -147,10 +159,13 @@ const DashboardContent = () => {
                         <FiSearch className="text-gray-400 ml-1" size={18} />
                         <input
                             type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Search for part name, material, or supplier..."
                             className="flex-1 bg-transparent px-3 py-1.5 text-sm text-gray-700 outline-none placeholder-gray-400"
                         />
                         <button
+                            onClick={handleSearch}
                             type="button"
                             className="rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
                         >
