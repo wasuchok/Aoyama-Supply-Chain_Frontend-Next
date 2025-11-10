@@ -98,9 +98,9 @@ const Page = () => {
                 d_province: info.d_province || "",
                 d_city: info.d_district || "",
                 pd_supplierName: info.p_sup_name || "",
-                pd_country: info.d_country || "",
-                pd_province: info.d_province || "",
-                pd_city: info.d_district || "",
+                pd_country: info.p_country || "",
+                pd_province: info.p_province || "",
+                pd_city: info.p_district || "",
             });
         } else {
             reset({
