@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { APP_ENV } from "@/config/env";
+import { authStorage } from "@/utils/auth";
 
 /**
  * ฟังก์ชันสร้าง instance ของ Axios
@@ -28,6 +29,13 @@ const createHttpClient = (withAuth: boolean = false): AxiosInstance => {
     instance.interceptors.response.use(
         (response: AxiosResponse) => response,
         (error) => {
+            if (error.response?.status === 401) {
+                authStorage.clear();
+                if (typeof window !== "undefined") {
+                    window.location.href = "/login";
+                }
+            }
+
             console.error("HTTP Error:", error.response?.data || error.message);
             throw error;
         }
