@@ -19,7 +19,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
                 ? "text-sm px-3 py-2"
                 : fieldSize === "lg"
                     ? "text-lg px-6 py-4"
-                    : "text-base px-4 py-3";
+                    : "text-sm px-4 py-3";
 
         return (
             <div className="flex flex-col gap-2 w-full relative group">

@@ -16,7 +16,7 @@ interface DetailItemProps {
 const DetailItem = ({ label, value }: DetailItemProps) => (
     <div className="rounded-xl border border-gray-100 bg-gray-50/80 px-4 py-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</p>
-        <p className="mt-1 text-base font-medium text-gray-900 break-words">{value ?? "-"}</p>
+        <p className="mt-1 text-sm font-medium text-gray-900 break-words">{value ?? "-"}</p>
     </div>
 )
 
@@ -79,8 +79,6 @@ const Page = () => {
         const info = partInformation.find(
             (item: any) => item.Tier_No === activeIndex + 1
         );
-
-        console.log("ℹ️ Tier info:", info);
 
         if (info) {
             reset({
