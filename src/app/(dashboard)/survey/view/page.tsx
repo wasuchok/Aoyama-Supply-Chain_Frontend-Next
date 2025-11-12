@@ -86,6 +86,7 @@ const DashboardContent = () => {
         { header: 'Part name', accessor: 'Part_Name', },
         { header: 'Material name', accessor: 'Mat_Name', width: '120px' },
         { header: 'Diameter', accessor: 'Diameter', },
+        { header: 'Product Type', accessor: 'product_type', },
         { header: 'Production by', accessor: 'Production_By', },
 
     ];
