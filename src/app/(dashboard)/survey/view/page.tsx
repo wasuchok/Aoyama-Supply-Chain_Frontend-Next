@@ -3,12 +3,66 @@
 import { ScrollableTable } from "@/app/components/survey/table/ScrollableTable";
 import { usePagination } from "@/app/hooks/usePagination";
 import { apiPublic } from "@/services/httpClient";
+import { fetchPartLevels } from "@/services/partLevels";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { IconType } from "react-icons";
 import { FaCartShopping, FaNetworkWired } from "react-icons/fa6";
 import { FiSearch } from "react-icons/fi";
 import { IoIosPeople } from "react-icons/io";
+import Select, { type StylesConfig } from "react-select";
+
+type LevelFilterOverrides = Partial<{ large: string; medium: string; small: string; production_by: string; search: string }>;
+type SelectOption = { value: string; label: string };
+
+const toSelectOptions = (values: string[]): SelectOption[] => values.map((value) => ({ value, label: value }));
+const productionByOptions = toSelectOptions(["ATC", "Supplier", "Aoyama"]);
+
+const selectStyles: StylesConfig<SelectOption, false> = {
+    control: (base, state) => ({
+        ...base,
+        borderRadius: "0.75rem",
+        borderColor: state.isFocused ? "#2563eb" : "#e5e7eb",
+        boxShadow: state.isFocused ? "0 0 0 1px #2563eb" : "none",
+        ":hover": {
+            borderColor: "#2563eb",
+        },
+        minHeight: "40px",
+        backgroundColor: state.isDisabled ? "#f9fafb" : "#ffffff",
+        fontSize: "0.875rem",
+    }),
+    valueContainer: (base) => ({
+        ...base,
+        padding: "2px 12px",
+    }),
+    placeholder: (base) => ({
+        ...base,
+        color: "#9ca3af",
+    }),
+    singleValue: (base) => ({
+        ...base,
+        color: "#111827",
+        fontWeight: 500,
+    }),
+    menu: (base) => ({
+        ...base,
+        borderRadius: "0.75rem",
+        overflow: "hidden",
+        fontSize: "0.875rem",
+    }),
+    option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isSelected ? "#2563eb" : state.isFocused ? "#dbeafe" : "#ffffff",
+        color: state.isSelected ? "#ffffff" : "#111827",
+        cursor: state.isDisabled ? "not-allowed" : "pointer",
+    }),
+    indicatorSeparator: () => ({ display: "none" }),
+    dropdownIndicator: (base, state) => ({
+        ...base,
+        color: state.isFocused ? "#2563eb" : "#9ca3af",
+        ":hover": { color: "#2563eb" },
+    }),
+};
 
 const DashboardContent = () => {
     const router = useRouter()
@@ -24,6 +78,24 @@ const DashboardContent = () => {
     const [metrics, setMetrics] = useState<
         { label: string; value: number; icon: IconType; iconColor: string; color: string }[]
     >([]);
+    const [largeOptions, setLargeOptions] = useState<string[]>([]);
+    const [mediumOptions, setMediumOptions] = useState<string[]>([]);
+    const [smallOptions, setSmallOptions] = useState<string[]>([]);
+    const [selectedLarge, setSelectedLarge] = useState("");
+    const [selectedMedium, setSelectedMedium] = useState("");
+    const [selectedSmall, setSelectedSmall] = useState("");
+    const [selectedProduction, setSelectedProduction] = useState("");
+    const [appliedSearchTerm, setAppliedSearchTerm] = useState("");
+    const largeSelectOptions = useMemo(() => toSelectOptions(largeOptions), [largeOptions]);
+    const mediumSelectOptions = useMemo(() => toSelectOptions(mediumOptions), [mediumOptions]);
+    const smallSelectOptions = useMemo(() => toSelectOptions(smallOptions), [smallOptions]);
+    const selectedLargeOption = useMemo<SelectOption | null>(() => (selectedLarge ? { value: selectedLarge, label: selectedLarge } : null), [selectedLarge]);
+    const selectedMediumOption = useMemo<SelectOption | null>(() => (selectedMedium ? { value: selectedMedium, label: selectedMedium } : null), [selectedMedium]);
+    const selectedSmallOption = useMemo<SelectOption | null>(() => (selectedSmall ? { value: selectedSmall, label: selectedSmall } : null), [selectedSmall]);
+    const selectedProductionOption = useMemo<SelectOption | null>(
+        () => (selectedProduction ? { value: selectedProduction, label: selectedProduction } : null),
+        [selectedProduction]
+    );
     const WAVE_ANIMATION_DURATION = 12; // seconds
 
     const fetchAmountProductionBy = async () => {
@@ -91,12 +163,106 @@ const DashboardContent = () => {
 
     ];
 
+    const buildFilters = (overrides?: LevelFilterOverrides) => {
+        const largeValue = overrides?.large ?? selectedLarge;
+        const mediumValue = overrides?.medium ?? selectedMedium;
+        const smallValue = overrides?.small ?? selectedSmall;
+        const productionValue = overrides?.production_by ?? selectedProduction;
+        const searchValue = overrides?.search !== undefined ? overrides.search : appliedSearchTerm;
+
+        const normalizedLarge = largeValue?.trim() ?? "";
+        const normalizedMedium = mediumValue?.trim() ?? "";
+        const normalizedSmall = smallValue?.trim() ?? "";
+        const normalizedProduction = productionValue?.trim() ?? "";
+        const normalizedSearch = searchValue?.trim() ?? "";
+
+        return {
+            search: normalizedSearch || undefined,
+            large: normalizedLarge || undefined,
+            medium: normalizedMedium || undefined,
+            small: normalizedSmall || undefined,
+            production_by: normalizedProduction || undefined,
+        };
+    };
+
+    const refetchWithFilters = (pageNumber = 1, overrides?: LevelFilterOverrides) => {
+        return fetchData(pageNumber, buildFilters(overrides));
+    };
+
+    const handleLargeChange = async (value?: string | null) => {
+        const normalizedValue = typeof value === "string" ? value.trim() : "";
+        setSelectedLarge(normalizedValue);
+        setSelectedMedium("");
+        setSelectedSmall("");
+        setMediumOptions([]);
+        setSmallOptions([]);
+
+        if (normalizedValue) {
+            try {
+                const response = await fetchPartLevels({ large: normalizedValue });
+                setMediumOptions(response.resultData ?? []);
+            } catch (error) {
+                console.log("Error fetching medium levels: ", error);
+            }
+        }
+
+        refetchWithFilters(1, { large: normalizedValue, medium: "", small: "" });
+    };
+
+    const handleMediumChange = async (value?: string | null) => {
+        const normalizedValue = typeof value === "string" ? value.trim() : "";
+        setSelectedMedium(normalizedValue);
+        setSelectedSmall("");
+        setSmallOptions([]);
+
+        if (normalizedValue && selectedLarge) {
+            try {
+                const response = await fetchPartLevels({
+                    large: selectedLarge,
+                    medium: normalizedValue,
+                });
+                setSmallOptions(response.resultData ?? []);
+            } catch (error) {
+                console.log("Error fetching small levels: ", error);
+            }
+        }
+
+        refetchWithFilters(1, { medium: normalizedValue, small: "" });
+    };
+
+    const handleSmallChange = (value?: string | null) => {
+        const normalizedValue = typeof value === "string" ? value.trim() : "";
+        setSelectedSmall(normalizedValue);
+        refetchWithFilters(1, { small: normalizedValue });
+    };
+
+    const handleProductionChange = (value?: string | null) => {
+        const normalizedValue = typeof value === "string" ? value.trim() : "";
+        setSelectedProduction(normalizedValue);
+        refetchWithFilters(1, { production_by: normalizedValue });
+    };
+
     useEffect(() => {
         fetchAmountProductionBy()
     }, [])
 
+    useEffect(() => {
+        const fetchLargeLevels = async () => {
+            try {
+                const response = await fetchPartLevels();
+                setLargeOptions(response.resultData ?? []);
+            } catch (error) {
+                console.log("Error fetching large levels: ", error);
+            }
+        };
+
+        fetchLargeLevels();
+    }, []);
+
     const handleSearch = () => {
-        fetchData(1, searchTerm);
+        const normalizedValue = searchTerm.trim();
+        setAppliedSearchTerm(normalizedValue);
+        refetchWithFilters(1, { search: normalizedValue });
     };
 
 
@@ -170,9 +336,67 @@ const DashboardContent = () => {
 
                     {loading && <p className="text-sm text-gray-500">Loading data...</p>}
 
+                    <div className="grid w-full gap-3 md:grid-cols-4 z-20">
+                        <div className="flex flex-col gap-1">
+                            <label htmlFor="filter-large" className="text-xs font-semibold uppercase tracking-wide text-gray-500">Large</label>
+                            <Select<SelectOption, false>
+                                inputId="filter-large"
+                                isClearable
+                                options={largeSelectOptions}
+                                value={selectedLargeOption}
+                                onChange={(option) => handleLargeChange(option?.value)}
+                                placeholder="All Large"
+                                classNamePrefix="rs"
+                                styles={selectStyles}
+                                isDisabled={largeSelectOptions.length === 0}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label htmlFor="filter-medium" className="text-xs font-semibold uppercase tracking-wide text-gray-500">Medium</label>
+                            <Select<SelectOption, false>
+                                inputId="filter-medium"
+                                isClearable
+                                options={mediumSelectOptions}
+                                value={selectedMediumOption}
+                                onChange={(option) => handleMediumChange(option?.value)}
+                                placeholder="All Medium"
+                                classNamePrefix="rs"
+                                styles={selectStyles}
+                                isDisabled={!selectedLarge || mediumSelectOptions.length === 0}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label htmlFor="filter-small" className="text-xs font-semibold uppercase tracking-wide text-gray-500">Small</label>
+                            <Select<SelectOption, false>
+                                inputId="filter-small"
+                                isClearable
+                                options={smallSelectOptions}
+                                value={selectedSmallOption}
+                                onChange={(option) => handleSmallChange(option?.value)}
+                                placeholder="All Small"
+                                classNamePrefix="rs"
+                                styles={selectStyles}
+                                isDisabled={!selectedMedium || smallSelectOptions.length === 0}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label htmlFor="filter-production" className="text-xs font-semibold uppercase tracking-wide text-gray-500">Production by</label>
+                            <Select<SelectOption, false>
+                                inputId="filter-production"
+                                isClearable
+                                options={productionByOptions}
+                                value={selectedProductionOption}
+                                onChange={(option) => handleProductionChange(option?.value)}
+                                placeholder="All sources"
+                                classNamePrefix="rs"
+                                styles={selectStyles}
+                            />
+                        </div>
+                    </div>
 
 
-                    <div className="flex items-center w-full max-w-md bg-gray-50 border border-gray-200 rounded-xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 transition">
+
+                    <div className="mt-2 flex items-center w-full max-w-md bg-gray-50 border border-gray-200 rounded-xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 transition">
                         <FiSearch className="text-gray-400 ml-1" size={18} />
                         <input
                             type="text"
@@ -202,7 +426,7 @@ const DashboardContent = () => {
                         <ScrollableTable
                             columns={columns}
                             data={data}
-                            loading={false}
+                            loading={loading}
                             className="h-full border-0 shadow-none"
                             height="100%"
                             onEdit={(data) => {
@@ -211,7 +435,7 @@ const DashboardContent = () => {
                             }}
                             currentPage={page}
                             totalPages={pagination?.total_pages || 1}
-                            onPageChange={(newPage) => fetchData(newPage)}
+                            onPageChange={(newPage) => refetchWithFilters(newPage)}
                         />
                     </div>
                 </div>

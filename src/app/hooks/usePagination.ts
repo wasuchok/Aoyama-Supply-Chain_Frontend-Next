@@ -3,6 +3,8 @@ import { publicApi } from "@/services/apiPublic";
 import { PaginationInfo } from "@/types/pagination";
 import { useEffect, useState } from "react";
 
+type QueryParams = Record<string, string | number | undefined | null>;
+
 export function usePagination(apiPath: string, pageSize = 10) {
     const [data, setData] = useState<any[]>([]);
     const [pagination, setPagination] = useState<PaginationInfo | null>(null);
@@ -10,7 +12,7 @@ export function usePagination(apiPath: string, pageSize = 10) {
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
-    const fetchData = async (newPage = 1, search?: string) => {
+    const fetchData = async (newPage = 1, extraParams?: QueryParams) => {
         try {
             setLoading(true);
 
@@ -20,8 +22,17 @@ export function usePagination(apiPath: string, pageSize = 10) {
                 page_size: pageSize.toString(),
             });
 
-            if (search && search.trim() !== "") {
-                queryParams.append("search", search.trim());
+            if (extraParams) {
+                Object.entries(extraParams).forEach(([key, value]) => {
+                    if (value === undefined || value === null) return;
+
+                    const normalizedValue =
+                        typeof value === "number" ? value.toString() : typeof value === "string" ? value.trim() : String(value);
+
+                    if (normalizedValue !== "") {
+                        queryParams.append(key, normalizedValue);
+                    }
+                });
             }
 
             const res = await publicApi.get<{

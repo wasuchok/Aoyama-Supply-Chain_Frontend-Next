@@ -27,7 +27,7 @@ const Page = () => {
     const [tierLength, setTierLength] = useState<number>(0)
     const [activeIndex, setActiveIndex] = useState(0)
     const [partInformation, setPartInformation] = useState<any>([])
-
+    const isReadOnly = true;
     const {
         control,
         handleSubmit,
@@ -174,6 +174,7 @@ const Page = () => {
                             control={control}
                             render={({ field, fieldState }) => (
                                 <TextField
+                                    readOnly={isReadOnly}
                                     label="Supplier Name"
                                     placeholder="Please fill in information..."
                                     {...field}
@@ -187,6 +188,7 @@ const Page = () => {
                             control={control}
                             render={({ field, fieldState }) => (
                                 <TextField
+                                    readOnly={isReadOnly}
                                     label="Industrial Estate"
                                     placeholder="Please fill in information..."
                                     {...field}
@@ -200,6 +202,7 @@ const Page = () => {
                             control={control}
                             render={({ field, fieldState }) => (
                                 <TextField
+                                    readOnly={isReadOnly}
                                     label="Country"
                                     placeholder="Please fill in information..."
                                     {...field}
@@ -213,6 +216,7 @@ const Page = () => {
                             control={control}
                             render={({ field, fieldState }) => (
                                 <TextField
+                                    readOnly={isReadOnly}
                                     label="Province"
                                     placeholder="Please fill in information..."
                                     {...field}
@@ -226,6 +230,7 @@ const Page = () => {
                             control={control}
                             render={({ field, fieldState }) => (
                                 <TextField
+                                    readOnly={isReadOnly}
                                     label="City"
                                     placeholder="Please fill in information..."
                                     {...field}
@@ -249,6 +254,7 @@ const Page = () => {
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <TextField
+                                        readOnly={isReadOnly}
                                         label="Chain Process"
                                         placeholder="Please fill in information..."
                                         {...field}
@@ -262,6 +268,7 @@ const Page = () => {
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <TextField
+                                        readOnly={isReadOnly}
                                         label="Material name"
                                         placeholder="Please fill in information..."
                                         {...field}
@@ -275,6 +282,7 @@ const Page = () => {
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <TextField
+                                        readOnly={isReadOnly}
                                         label="Diameter"
                                         placeholder="Please fill in information..."
                                         {...field}
@@ -288,6 +296,7 @@ const Page = () => {
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <TextField
+                                        readOnly={isReadOnly}
                                         label="Std. Stock (days)"
                                         placeholder="Please fill in information..."
                                         {...field}
@@ -313,6 +322,7 @@ const Page = () => {
                                         control={control}
                                         render={({ field, fieldState }) => (
                                             <TextField
+                                                readOnly={isReadOnly}
                                                 label="Supplier name"
                                                 placeholder="Please fill in information..."
                                                 {...field}
@@ -330,6 +340,7 @@ const Page = () => {
                                             control={control}
                                             render={({ field, fieldState }) => (
                                                 <TextField
+                                                    readOnly={isReadOnly}
                                                     label="Country"
                                                     placeholder="Please fill in information..."
                                                     {...field}
@@ -345,6 +356,7 @@ const Page = () => {
                                             control={control}
                                             render={({ field, fieldState }) => (
                                                 <TextField
+                                                    readOnly={isReadOnly}
                                                     label="Province"
                                                     placeholder="Please fill in information..."
                                                     {...field}
@@ -361,6 +373,7 @@ const Page = () => {
                                             control={control}
                                             render={({ field, fieldState }) => (
                                                 <TextField
+                                                    readOnly={isReadOnly}
                                                     label="City"
                                                     placeholder="Please fill in information..."
                                                     {...field}
@@ -380,6 +393,7 @@ const Page = () => {
                                     control={control}
                                     render={({ field, fieldState }) => (
                                         <TextField
+                                            readOnly={isReadOnly}
                                             label="Supplier name"
                                             placeholder="Please fill in information..."
                                             {...field}
@@ -396,6 +410,7 @@ const Page = () => {
                                             control={control}
                                             render={({ field, fieldState }) => (
                                                 <TextField
+                                                    readOnly={isReadOnly}
                                                     label="Country"
                                                     placeholder="Please fill in information..."
                                                     {...field}
@@ -412,6 +427,7 @@ const Page = () => {
                                             control={control}
                                             render={({ field, fieldState }) => (
                                                 <TextField
+                                                    readOnly={isReadOnly}
                                                     label="Province"
                                                     placeholder="Please fill in information..."
                                                     {...field}
@@ -428,6 +444,7 @@ const Page = () => {
                                             control={control}
                                             render={({ field, fieldState }) => (
                                                 <TextField
+                                                    readOnly={isReadOnly}
                                                     label="City"
                                                     placeholder="Please fill in information..."
                                                     {...field}
