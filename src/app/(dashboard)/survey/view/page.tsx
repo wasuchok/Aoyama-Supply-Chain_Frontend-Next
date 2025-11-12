@@ -96,7 +96,7 @@ const DashboardContent = () => {
         () => (selectedProduction ? { value: selectedProduction, label: selectedProduction } : null),
         [selectedProduction]
     );
-    const WAVE_ANIMATION_DURATION = 12; // seconds
+
 
     const fetchAmountProductionBy = async () => {
         try {
@@ -158,7 +158,15 @@ const DashboardContent = () => {
         { header: 'Part name', accessor: 'Part_Name', },
         { header: 'Material name', accessor: 'Mat_Name', width: '120px' },
         { header: 'Diameter', accessor: 'Diameter', },
-        { header: 'Product Type', accessor: 'product_type', },
+        {
+            header: 'Product Type', accessor: 'product_type', render: (value: string, data: any) => {
+                return (
+                    <div>
+                        {data.Large}/{data.Medium}/{data.Small}
+                    </div>
+                )
+            }
+        },
         { header: 'Production by', accessor: 'Production_By', },
 
     ];
