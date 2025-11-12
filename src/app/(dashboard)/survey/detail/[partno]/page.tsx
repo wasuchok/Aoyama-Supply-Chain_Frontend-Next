@@ -162,8 +162,8 @@ const Page = () => {
 
 
 
-                    <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm flex gap-2 flex-col ">
-                        <div className="text-lg font-semibold mb-5">
+                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2 border-l-4 border-l-blue-500">
+                        <div className="text-lg font-semibold mb-3 text-gray-900">
                             SUPPLIER INFORMATION
                         </div>
 
@@ -239,8 +239,8 @@ const Page = () => {
 
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm flex gap-2 flex-col ">
-                        <div className="text-lg font-semibold mb-5">
+                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2 border-l-4 border-l-amber-500">
+                        <div className="text-lg font-semibold mb-3 text-gray-900">
                             PRODUCTION INFORMATION
                         </div>
 
@@ -306,8 +306,8 @@ const Page = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm flex gap-2 flex-col ">
-                        <div className="text-lg font-semibold mb-5">
+                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2 border-l-4 border-l-emerald-500">
+                        <div className="text-lg font-semibold mb-3 text-gray-900">
                             BACK UP CONDITION
                         </div>
 
