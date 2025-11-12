@@ -45,7 +45,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                     />
                 )}
 
-                <div className="flex-1 flex flex-col overflow-hidden lg:mx-16 lg:mt-4">
+                <div className="flex-1 flex flex-col overflow-hidden lg:mx-6 lg:mt-4">
                     <Header onToggle={toggleSidebar} />
                     {children}
                 </div>
