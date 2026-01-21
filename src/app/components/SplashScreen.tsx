@@ -13,14 +13,14 @@ export default function SplashScreen({ isVisible }: SplashScreenProps) {
             aria-live="polite"
             role="status"
             className={`fixed inset-0 z-[999] flex items-center justify-center overflow-hidden
-      bg-primary-600 text-white transition-opacity duration-700 ease-in-out
+      bg-[#1f4b99] text-white transition-opacity duration-700 ease-in-out
       ${isVisible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
         >
             {/* 🔹 Animated Background Layer */}
             <div className="absolute inset-0 opacity-60">
-                <div className="absolute -left-24 top-12 h-72 w-72 rounded-full bg-primary-400/40 blur-[120px] animate-pulse" />
+                <div className="absolute -left-24 top-12 h-72 w-72 rounded-full bg-[#2c5fb8]/40 blur-[120px] animate-pulse" />
                 <div
-                    className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-primary-700/30 blur-[120px] animate-pulse"
+                    className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-[#163a6b]/30 blur-[120px] animate-pulse"
                     style={{ animationDelay: "0.4s" }}
                 />
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_0%,_transparent_70%)]" />

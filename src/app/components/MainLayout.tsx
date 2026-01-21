@@ -28,7 +28,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <SplashScreen isVisible={isSplashVisible} />
 
             <div
-                className={`flex h-screen bg-white transition-all duration-500 ${isSplashVisible ? "pointer-events-none opacity-0 scale-[0.98]" : "opacity-100 scale-100"
+                className={`flex h-screen bg-[#f3f6fb] text-[#1b2a41] transition-all duration-500 ${isSplashVisible ? "pointer-events-none opacity-0 scale-[0.98]" : "opacity-100 scale-100"
                     }`}
             >
                 <Sidebar

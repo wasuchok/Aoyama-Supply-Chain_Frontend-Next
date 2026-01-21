@@ -22,13 +22,13 @@ const selectStyles: StylesConfig<SelectOption, false> = {
     control: (base, state) => ({
         ...base,
         borderRadius: "0.75rem",
-        borderColor: state.isFocused ? "#2563eb" : "#e5e7eb",
-        boxShadow: state.isFocused ? "0 0 0 1px #2563eb" : "none",
+        borderColor: state.isFocused ? "#1f4b99" : "#d7e2f3",
+        boxShadow: state.isFocused ? "0 0 0 1px #2c5fb8" : "none",
         ":hover": {
-            borderColor: "#2563eb",
+            borderColor: "#1f4b99",
         },
         minHeight: "40px",
-        backgroundColor: state.isDisabled ? "#f9fafb" : "#ffffff",
+        backgroundColor: state.isDisabled ? "#e9f0fb" : "#f8fbff",
         fontSize: "0.875rem",
     }),
     valueContainer: (base) => ({
@@ -37,11 +37,11 @@ const selectStyles: StylesConfig<SelectOption, false> = {
     }),
     placeholder: (base) => ({
         ...base,
-        color: "#9ca3af",
+        color: "#7b8aa6",
     }),
     singleValue: (base) => ({
         ...base,
-        color: "#111827",
+        color: "#1f2a37",
         fontWeight: 500,
     }),
     menu: (base) => ({
@@ -49,18 +49,20 @@ const selectStyles: StylesConfig<SelectOption, false> = {
         borderRadius: "0.75rem",
         overflow: "hidden",
         fontSize: "0.875rem",
+        backgroundColor: "#f8fbff",
+        border: "1px solid #d7e2f3",
     }),
     option: (base, state) => ({
         ...base,
-        backgroundColor: state.isSelected ? "#2563eb" : state.isFocused ? "#dbeafe" : "#ffffff",
-        color: state.isSelected ? "#ffffff" : "#111827",
+        backgroundColor: state.isSelected ? "#1f4b99" : state.isFocused ? "#e5eefb" : "#f8fbff",
+        color: state.isSelected ? "#ffffff" : "#0f172a",
         cursor: state.isDisabled ? "not-allowed" : "pointer",
     }),
     indicatorSeparator: () => ({ display: "none" }),
     dropdownIndicator: (base, state) => ({
         ...base,
-        color: state.isFocused ? "#2563eb" : "#9ca3af",
-        ":hover": { color: "#2563eb" },
+        color: state.isFocused ? "#1f4b99" : "#7b8aa6",
+        ":hover": { color: "#1f4b99" },
     }),
 };
 
@@ -110,20 +112,20 @@ const DashboardContent = () => {
                     {
                         label: "ATC",
                         icon: IoIosPeople,
-                        iconColor: "text-primary-600",
-                        color: "#3b82f6",
+                        iconColor: "text-[#1f4b99]",
+                        color: "#1f4b99",
                     },
                     {
                         label: "Supplier",
                         icon: FaCartShopping,
-                        iconColor: "text-green-600",
-                        color: "#22c55e",
+                        iconColor: "text-[#2c5fb8]",
+                        color: "#2c5fb8",
                     },
                     {
                         label: "Aoyama group",
                         icon: FaNetworkWired,
-                        iconColor: "text-pink-600",
-                        color: "#ec4899",
+                        iconColor: "text-[#3b74c5]",
+                        color: "#3b74c5",
                     },
                 ];
 
@@ -277,10 +279,10 @@ const DashboardContent = () => {
 
 
     return (
-        <main className="flex-1 overflow-y-auto p-4">
+        <main className="flex-1 overflow-y-auto bg-[#f3f6fb] p-4">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
-                    <section className="relative flex-1 overflow-hidden rounded-3xl bg-gradient-to-br from-sky-600 via-blue-600 to-indigo-600 p-6 text-white shadow-lg">
+                    <section className="relative flex-1 overflow-hidden rounded-3xl bg-gradient-to-br from-[#1f4b99] via-[#2c5fb8] to-[#3b74c5] p-6 text-white shadow-lg">
                         <div className="pointer-events-none absolute inset-0">
                             <div className="absolute -top-16 -right-10 h-40 w-40 rounded-full bg-white/25 blur-3xl" />
                             <div className="absolute -bottom-20 left-8 h-32 w-32 rounded-full bg-cyan-300/40 blur-3xl" />
@@ -340,13 +342,13 @@ const DashboardContent = () => {
 
 
 
-                <div className="flex flex-col rounded-2xl border border-gray-100 bg-white p-4 shadow-sm lg:h-[calc(100vh-300px)]">
+                <div className="flex flex-col rounded-2xl border border-[#d7e2f3] bg-[#f8fbff] p-4 shadow-sm lg:h-[calc(100vh-300px)]">
 
-                    {loading && <p className="text-sm text-gray-500">Loading data...</p>}
+                    {loading && <p className="text-sm text-[#5b6b86]">Loading data...</p>}
 
                     <div className="grid w-full gap-3 md:grid-cols-4 z-20">
                         <div className="flex flex-col gap-1">
-                            <label htmlFor="filter-large" className="text-xs font-semibold uppercase tracking-wide text-gray-500">Large</label>
+                            <label htmlFor="filter-large" className="text-xs font-semibold uppercase tracking-wide text-[#5b6b86]">Large</label>
                             <Select<SelectOption, false>
                                 inputId="filter-large"
                                 isClearable
@@ -360,7 +362,7 @@ const DashboardContent = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <label htmlFor="filter-medium" className="text-xs font-semibold uppercase tracking-wide text-gray-500">Medium</label>
+                            <label htmlFor="filter-medium" className="text-xs font-semibold uppercase tracking-wide text-[#5b6b86]">Medium</label>
                             <Select<SelectOption, false>
                                 inputId="filter-medium"
                                 isClearable
@@ -374,7 +376,7 @@ const DashboardContent = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <label htmlFor="filter-small" className="text-xs font-semibold uppercase tracking-wide text-gray-500">Small</label>
+                            <label htmlFor="filter-small" className="text-xs font-semibold uppercase tracking-wide text-[#5b6b86]">Small</label>
                             <Select<SelectOption, false>
                                 inputId="filter-small"
                                 isClearable
@@ -388,7 +390,7 @@ const DashboardContent = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <label htmlFor="filter-production" className="text-xs font-semibold uppercase tracking-wide text-gray-500">Production by</label>
+                            <label htmlFor="filter-production" className="text-xs font-semibold uppercase tracking-wide text-[#5b6b86]">Production by</label>
                             <Select<SelectOption, false>
                                 inputId="filter-production"
                                 isClearable
@@ -404,8 +406,8 @@ const DashboardContent = () => {
 
 
 
-                    <div className="mt-2 flex items-center w-full max-w-md bg-gray-50 border border-gray-200 rounded-xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 transition">
-                        <FiSearch className="text-gray-400 ml-1" size={18} />
+                    <div className="mt-2 flex items-center w-full max-w-md bg-[#e9f0fb] border border-[#d7e2f3] rounded-xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-[#2c5fb8] transition">
+                        <FiSearch className="text-[#7b8aa6] ml-1" size={18} />
                         <input
                             type="text"
                             value={searchTerm}
@@ -417,12 +419,12 @@ const DashboardContent = () => {
                                 }
                             }}
                             placeholder="Search for part name, material, or supplier..."
-                            className="flex-1 bg-transparent px-3 py-1.5 text-sm text-gray-700 outline-none placeholder-gray-400"
+                            className="flex-1 bg-transparent px-3 py-1.5 text-sm text-slate-700 outline-none placeholder:text-[#7b8aa6]"
                         />
                         <button
                             onClick={handleSearch}
                             type="button"
-                            className="rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+                            className="rounded-lg bg-[#1f4b99] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#163a6b] transition-colors"
                         >
                             Search
                         </button>
@@ -473,7 +475,7 @@ const SummaryPieChart = ({ data }: { data: SummarySlice[] }) => {
 
     const chartStyle = total
         ? { background: `conic-gradient(${gradient})` }
-        : { backgroundColor: "#e5e7eb" };
+        : { backgroundColor: "#dbe7f8" };
 
     const displaySlice = hoverSlice ?? { label: "Total", value: total, color: "#111827" };
 
@@ -520,13 +522,13 @@ const SummaryPieChart = ({ data }: { data: SummarySlice[] }) => {
 
 
     return (
-        <div className="w-full rounded-2xl border border-gray-100 bg-white p-6 shadow-sm lg:max-w-sm">
+        <div className="w-full rounded-2xl border border-[#d7e2f3] bg-[#f8fbff] p-6 shadow-sm lg:max-w-sm">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">Distribution</p>
-                    <p className="text-lg font-bold text-gray-900">Parts overview</p>
+                    <p className="text-sm font-semibold uppercase tracking-wide text-[#5b6b86]">Distribution</p>
+                    <p className="text-lg font-bold text-slate-900">Parts overview</p>
                 </div>
-                <div className="rounded-full border border-gray-100 px-3 py-1 text-xs font-medium text-gray-500">
+                <div className="rounded-full border border-[#d7e2f3] px-3 py-1 text-xs font-medium text-[#5b6b86]">
                     {total.toLocaleString()} total
                 </div>
             </div>
@@ -539,10 +541,10 @@ const SummaryPieChart = ({ data }: { data: SummarySlice[] }) => {
                     aria-label="Parts distribution pie chart"
                 >
                     <div className="h-full w-full rounded-full transition-all duration-200" style={chartStyle}></div>
-                    <div className="absolute inset-6 flex flex-col items-center justify-center rounded-full bg-white/95 text-center">
-                        <span className="text-xs font-semibold uppercase text-gray-500">{displaySlice.label}</span>
-                        <span className="text-2xl font-bold text-gray-900">{displaySlice.value.toLocaleString()}</span>
-                        <span className="text-[10px] text-gray-400">parts</span>
+                    <div className="absolute inset-6 flex flex-col items-center justify-center rounded-full bg-[#f8fbff] text-center">
+                        <span className="text-xs font-semibold uppercase text-[#5b6b86]">{displaySlice.label}</span>
+                        <span className="text-2xl font-bold text-slate-900">{displaySlice.value.toLocaleString()}</span>
+                        <span className="text-[10px] text-[#7b8aa6]">parts</span>
                     </div>
                     {hoverSlice && tooltipPos && (
                         <div

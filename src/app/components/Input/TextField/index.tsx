@@ -26,7 +26,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
                 {label && (
                     <label
                         className={twMerge(
-                            "text-gray-600 font-semibold text-sm transition-all duration-200 group-focus-within:text-primary-500 group-focus-within:translate-y-[-2px]",
+                            "text-[#5b6b86] font-semibold text-sm transition-all duration-200 group-focus-within:text-[#1f4b99] group-focus-within:translate-y-[-2px]",
                             fieldSize === "sm" && "text-xs"
                         )}
                     >
@@ -37,7 +37,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
                     <input
                         ref={ref}
                         className={twMerge(
-                            "w-full rounded-xl border border-gray-100 bg-white focus:border-primary-400 focus:ring-1 focus:ring-primary-100/30 outline-none transition-all duration-200 placeholder:text-gray-400 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed",
+                            "w-full rounded-xl border border-[#d7e2f3] bg-[#f8fbff] focus:border-[#1f4b99] focus:ring-1 focus:ring-[#2c5fb8]/30 outline-none transition-all duration-200 placeholder:text-[#7b8aa6] disabled:bg-[#e9f0fb] disabled:text-[#6b7a94] disabled:cursor-not-allowed",
                             sizeClass,
                             className,
                             isLoading ? "pr-12" : ""
