@@ -123,61 +123,235 @@ const Page = () => {
         }
     }, [activeIndex, partInformation, reset]);
 
-    const handleExportExcel = () => {
+    const handleExportExcel = async () => {
         if (!partMaster) return;
 
-        const info = partInformation.find(
-            (item: any) => item.Tier_No === activeIndex + 1
-        ) ?? {};
+        try {
+            const ExcelJSImport = await import("exceljs");
+            const ExcelJS: any = ExcelJSImport.default ?? ExcelJSImport;
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Supply Chain Management", {
+                properties: { defaultRowHeight: 18 },
+            });
 
-        const rows: Array<[string, string | number | null | undefined]> = [
-            ["ATC Part no.", partMaster?.Part_No],
-            ["Part name", partMaster?.Part_Name],
-            ["Material name", partMaster?.Mat_Name],
-            ["Diameter", partMaster?.Diameter],
-            ["Product type", [partMaster?.Large, partMaster?.Medium, partMaster?.Small].filter(Boolean).join(" / ")],
-            ["Size", partMaster?.M_Size],
-            ["Surface", partMaster?.Surface],
-            ["Production by", partMaster?.Production_By],
-            ["Tier No.", info?.Tier_No ?? activeIndex + 1],
-            ["Supplier Name", info?.Sup_Name],
-            ["Industrial Estate", info?.Inductrial_Estate],
-            ["Country", info?.Country],
-            ["Province", info?.Province],
-            ["City", info?.District],
-            ["Chain Process", info?.Chain_Process],
-            ["Material name (production)", info?.C_mat_name],
-            ["Diameter (production)", info?.c_diameter],
-            ["Std. Stock (days)", info?.Std_Stock],
-            ["Dual source supplier", info?.d_sup_name],
-            ["Dual source country", info?.d_country],
-            ["Dual source province", info?.d_province],
-            ["Dual source city", info?.d_district],
-            ["PD replacement supplier", info?.p_sup_name],
-            ["PD replacement country", info?.p_country],
-            ["PD replacement province", info?.p_province],
-            ["PD replacement city", info?.p_district],
-        ];
+            const sortedTiers = [...partInformation].sort(
+                (a, b) => (a?.Tier_No ?? 0) - (b?.Tier_No ?? 0)
+            );
+            const tiers = sortedTiers.length ? sortedTiers : [{}];
+            const mainTier = sortedTiers.find((tier: any) => tier?.Tier_No === 1) ?? tiers[0] ?? {};
 
-        const formatCsvValue = (value: string | number | null | undefined) => {
-            const normalized = value === null || value === undefined || value === "" ? "-" : String(value);
-            return `"${normalized.replace(/"/g, '""')}"`;
-        };
+            const desiredRows = Math.max(tiers.length, 1);
 
-        const csvContent = [
-            "Field,Value",
-            ...rows.map(([label, value]) => `${formatCsvValue(label)},${formatCsvValue(value)}`),
-        ].join("\n");
+            const setCell = (col: string, rowNumber: number, value: any) => {
+                worksheet.getCell(`${col}${rowNumber}`).value =
+                    value === undefined || value === null || value === "" ? null : value;
+            };
 
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `part-${partMaster?.Part_No ?? "detail"}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
+            const applyBorder = (cell: any) => {
+                cell.border = {
+                    top: { style: "thin", color: { argb: "D9E2EC" } },
+                    left: { style: "thin", color: { argb: "D9E2EC" } },
+                    bottom: { style: "thin", color: { argb: "D9E2EC" } },
+                    right: { style: "thin", color: { argb: "D9E2EC" } },
+                };
+            };
+
+            const yesIf = (value: any) => (value ? "Yes" : null);
+
+            worksheet.columns = [
+                { width: 2 },  // A
+                { width: 6 },  // B
+                { width: 16 }, // C
+                { width: 22 }, // D
+                { width: 28 }, // E
+                { width: 16 }, // F
+                { width: 14 }, // G
+                { width: 14 }, // H
+                { width: 28 }, // I
+                { width: 16 }, // J
+                { width: 18 }, // K
+                { width: 14 }, // L
+                { width: 6 },  // M
+                { width: 28 }, // N
+                { width: 16 }, // O
+                { width: 22 }, // P
+                { width: 16 }, // Q
+                { width: 14 }, // R
+                { width: 14 }, // S
+                { width: 28 }, // T
+                { width: 16 }, // U
+                { width: 18 }, // V
+                { width: 14 }, // W
+                { width: 2 },  // X
+                { width: 28 }, // Y
+                { width: 16 }, // Z
+                { width: 14 }, // AA
+                { width: 14 }, // AB
+                { width: 28 }, // AC
+                { width: 16 }, // AD
+                { width: 14 }, // AE
+                { width: 14 }, // AF
+            ];
+
+            worksheet.mergeCells("A1:AF1");
+            setCell("A", 1, "Supply Chain Management");
+            worksheet.getCell("A1").font = { bold: true, size: 16 };
+            worksheet.getCell("A1").alignment = { horizontal: "center", vertical: "middle" };
+            worksheet.getRow(1).height = 26;
+
+            worksheet.mergeCells("B3:L5");
+            worksheet.mergeCells("M3:W5");
+            worksheet.mergeCells("Y3:AF5");
+            setCell("B", 3, "1st Tier");
+            setCell("M", 3, "Component / Material Information\n(Sub Tier)");
+            setCell("Y", 3, "Back up Supplier");
+            ["B3", "M3", "Y3"].forEach((cellAddress) => {
+                const cell = worksheet.getCell(cellAddress);
+                cell.font = { bold: true, size: 12 };
+                cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+            });
+
+            worksheet.mergeCells("B6:B8");
+            worksheet.mergeCells("C6:C8");
+            worksheet.mergeCells("D6:D8");
+            worksheet.mergeCells("E6:E8");
+            worksheet.mergeCells("F6:I6");
+            worksheet.mergeCells("J6:K6");
+            worksheet.mergeCells("L6:L8");
+            worksheet.mergeCells("M6:M8");
+            worksheet.mergeCells("N6:N8");
+            worksheet.mergeCells("O6:O8");
+            worksheet.mergeCells("P6:P8");
+            worksheet.mergeCells("Q6:T6");
+            worksheet.mergeCells("U6:V6");
+            worksheet.mergeCells("W6:W8");
+            worksheet.mergeCells("Y6:AB6");
+            worksheet.mergeCells("AC6:AF6");
+            worksheet.mergeCells("J7:J8");
+            worksheet.mergeCells("K7:K8");
+            worksheet.mergeCells("U7:U8");
+            worksheet.mergeCells("V7:V8");
+            worksheet.mergeCells("Y7:Y8");
+            worksheet.mergeCells("Z7:AB7");
+            worksheet.mergeCells("AC7:AC8");
+            worksheet.mergeCells("AD7:AF7");
+
+            setCell("B", 6, "No.");
+            setCell("C", 6, "ATC NO.");
+            setCell("D", 6, "Part Name");
+            setCell("E", 6, "Supplier name");
+            setCell("F", 6, "Location");
+            setCell("J", 6, "Back up Condition");
+            setCell("L", 6, "Standard Stock\n(days)");
+            setCell("M", 6, "Tier");
+            setCell("N", 6, "Supplier name");
+            setCell("O", 6, "ATC Part No.");
+            setCell("P", 6, "Part/Component name");
+            setCell("Q", 6, "Location");
+            setCell("U", 6, "Back up Condition");
+            setCell("W", 6, "Standard Stock\n(days)");
+            setCell("Y", 6, "Dual Source Supplier");
+            setCell("AC", 6, "PD Replacement Supplier");
+
+            setCell("F", 7, "Country");
+            setCell("G", 7, "Province");
+            setCell("H", 7, "City");
+            setCell("I", 7, "Industrial Estate");
+            setCell("J", 7, "Dual Source\n(Same Supplier)");
+            setCell("K", 7, "PD Replacement\n(Diff. Supplier)");
+
+            setCell("Q", 7, "Country");
+            setCell("R", 7, "Province");
+            setCell("S", 7, "City");
+            setCell("T", 7, "Industrial Estate");
+            setCell("U", 7, "Dual Source\n(Same Supplier)");
+            setCell("V", 7, "PD Replacement\n(Diff. Supplier)");
+
+            setCell("Y", 7, "Supplier Name");
+            setCell("Z", 7, "Supplier Location");
+            setCell("AC", 7, "Supplier Name");
+            setCell("AD", 7, "Supplier Location");
+
+            for (let row = 6; row <= 7; row += 1) {
+                const worksheetRow = worksheet.getRow(row);
+                worksheetRow.height = 26;
+                for (let col = 2; col <= 32; col += 1) {
+                    const cell = worksheet.getCell(row, col);
+                    cell.font = { bold: true, size: 10 };
+                    cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+                    cell.fill = {
+                        type: "pattern",
+                        pattern: "solid",
+                        fgColor: { argb: "EAF2FB" },
+                    };
+                    applyBorder(cell);
+                }
+            }
+
+            worksheet.views = [{ state: "frozen", ySplit: 8, xSplit: 1 }];
+
+            const startRow = 9;
+            const mainRow = startRow;
+            setCell("B", mainRow, 1);
+            setCell("C", mainRow, partMaster?.Part_No);
+            setCell("D", mainRow, partMaster?.Part_Name);
+            setCell("E", mainRow, mainTier?.Sup_Name);
+            setCell("F", mainRow, mainTier?.Country);
+            setCell("G", mainRow, mainTier?.Province);
+            setCell("H", mainRow, mainTier?.District);
+            setCell("I", mainRow, mainTier?.Inductrial_Estate);
+            setCell("J", mainRow, yesIf(mainTier?.d_sup_name));
+            setCell("K", mainRow, yesIf(mainTier?.p_sup_name));
+            setCell("L", mainRow, mainTier?.Std_Stock);
+
+            tiers.forEach((tier: any, index: number) => {
+                const row = startRow + index;
+
+                setCell("M", row, tier?.Tier_No ?? index + 1);
+                setCell("N", row, tier?.Sup_Name);
+                setCell("O", row, tier?.Part_No ?? partMaster?.Part_No);
+                setCell("P", row, tier?.Part_Name ?? tier?.C_mat_name ?? partMaster?.Part_Name);
+                setCell("Q", row, tier?.Country);
+                setCell("R", row, tier?.Province);
+                setCell("S", row, tier?.District);
+                setCell("T", row, tier?.Inductrial_Estate);
+                setCell("U", row, yesIf(tier?.d_sup_name));
+                setCell("V", row, yesIf(tier?.p_sup_name));
+                setCell("W", row, tier?.Std_Stock);
+
+                setCell("Y", row, tier?.d_sup_name);
+                setCell("Z", row, tier?.d_country);
+                setCell("AA", row, tier?.d_province);
+                setCell("AB", row, tier?.d_district);
+                setCell("AC", row, tier?.p_sup_name);
+                setCell("AD", row, tier?.p_country);
+                setCell("AE", row, tier?.p_province);
+                setCell("AF", row, tier?.p_district);
+            });
+
+            for (let row = startRow; row < startRow + desiredRows; row += 1) {
+                for (let col = 2; col <= 32; col += 1) {
+                    const cell = worksheet.getCell(row, col);
+                    cell.alignment = { vertical: "middle", wrapText: true };
+                    applyBorder(cell);
+                }
+            }
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "Supply Chain Management1.xlsx";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Export Excel failed:", error);
+        }
     };
 
 
