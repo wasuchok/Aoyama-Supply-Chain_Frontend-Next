@@ -156,7 +156,7 @@ const Page = () => {
                 };
             };
 
-            const yesIf = (value: any) => (value ? "Yes" : null);
+            const yesIf = (value: any) => (value ? "Yes" : "No");
 
             worksheet.columns = [
                 { width: 2 },  // A
@@ -309,8 +309,8 @@ const Page = () => {
 
                 setCell("M", row, tier?.Tier_No ?? index + 1);
                 setCell("N", row, tier?.Sup_Name);
-                setCell("O", row, tier?.Part_No ?? partMaster?.Part_No);
-                setCell("P", row, tier?.Part_Name ?? tier?.C_mat_name ?? partMaster?.Part_Name);
+                setCell("O", row, tier?.Product_No ?? partMaster?.Product_No);
+                setCell("P", row, tier?.Product_Name ?? tier?.Product_Name ?? partMaster?.Product_Name);
                 setCell("Q", row, tier?.Country);
                 setCell("R", row, tier?.Province);
                 setCell("S", row, tier?.District);
